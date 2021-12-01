@@ -1,2 +1,4 @@
 *.mp3
 Songs/*.mp3
+/Music1.py
+/Practice.py
