@@ -3,6 +3,8 @@ from pydub.playback import play
 import fnmatch
 import os
 import shutil
+from pygame import mixer
+import dbus
 
 
 class Music:
@@ -12,7 +14,7 @@ class Music:
         self.Folders = []
 
 
-    def get_songs(self):
+    def __getsongs__(self):
 
         Current = os.getcwd()
         New = os.path.join(Current , r'Songs')
@@ -35,7 +37,7 @@ class Music:
         #return self.Tracks , self.Folders
     
 
-    def play(self):
+    def __play__(self):
         Val = 1
         song = os.listdir(r'Songs')
         for file in song:
@@ -46,14 +48,15 @@ class Music:
         #print(Song)
         sound = AudioSegment.from_file(Song, format="mp3")
         play(sound)
+    
 
 
 
 
 music = Music()
-music.get_songs()
-music.play()
-
+#music.__getsongs__()
+music.__play__()
+music.__pause__()
 '''
 #for i in range(len(Tracks)):
 #    print(i+1 , ": " , Tracks[i])
