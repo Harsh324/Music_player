@@ -1,5 +1,6 @@
 *.mp3
 Songs/*.mp3
+*.txt
 
 # Editors
 .vscode/
