@@ -2,9 +2,6 @@ from pydub import AudioSegment
 from pydub.playback import play
 import fnmatch
 import os
-import shutil
-from pygame import mixer
-import dbus
 
 
 class Music:
@@ -12,41 +9,55 @@ class Music:
     def __init__(self):
         self.Tracks = []
         self.Folders = []
+        self.songsList = {}
+        
+        self.__get_songs()
+        self.__setList()
+        
 
 
-    def __getsongs__(self):
-
-        Current = os.getcwd()
-        New = os.path.join(Current , r'Songs')
-        if not os.path.exists(New):
-            os.makedirs(New)
-
-        Path , Format = '/' , '*.mp3'
-        #Tracks , Folders = [],[]
+    def __get_songs(self, Path = '/', Format = '*.mp3'):
+        
+        try :
+            cacheFile = open("Cache.txt", 'x')
+        except : 
+            return
+        
         for root, dirs, files in os.walk(Path):
             for filename in fnmatch.filter(files, Format):
                 self.Folders.append(os.path.join(root))
                 self.Tracks.append(os.path.join(filename))
                 Source = os.path.join(root , filename)
-                try:
-                    shutil.copy(Source , New)
-                except shutil.SameFileError:
-                    continue
+               
+        
+                cacheFile.write(filename + ":*:")
+                cacheFile.write(Source)
+                cacheFile.write('\n')
+               
+        cacheFile.close()
 
-        #print(os.path.join(root, filename))
-        #return self.Tracks , self.Folders
+    
+    def __setList(self):
+        self.__get_songs()
+        cacheFile = open("Cache.txt", 'r')
+        
+        for line in cacheFile:
+            name, path = line.split(":*:")
+            self.songsList[name] = path[:-1]
+        
     
 
-    def __play__(self):
-        Val = 1
-        song = os.listdir(r'Songs')
-        for file in song:
-            print(Val , ": ",file)
-            Val +=1
+    def play(self):
+    
+        val = 1
+        for song in self.songsList.keys():
+            print(val , ": ", song)
+            val += 1
+            
         Num = int(input("Enter the Song Number to play : "))
-        Song = os.path.join(r'Songs' , song[Num-1])
-        #print(Song)
-        sound = AudioSegment.from_file(Song, format="mp3")
+        songsName = list(self.songsList)
+        
+        sound = AudioSegment.from_file(self.songsList[songsName[Num-1]], format="mp3")
         play(sound)
     
 
@@ -54,22 +65,4 @@ class Music:
 
 
 music = Music()
-#music.__getsongs__()
-music.__play__()
-music.__pause__()
-'''
-#for i in range(len(Tracks)):
-#    print(i+1 , ": " , Tracks[i])
-Root = '/'
-Format = '*.mp3'
-Tracks , Folders = [],[]
-for root, dirs, files in os.walk(Root):
-    for filename in fnmatch.filter(files, Format):
-        #folder = os.path.join(root)
-        #track = os.path.join(root, filename)
-        Folders.append(os.path.join(root))
-        Tracks.append(os.path.join(filename))'
-for i in range(len(Song)):
-    print(i+1 , ": " , Song[i])
-#sound = AudioSegment.from_file("07 Channa Mereya - Arijit Singh 320Kbps.mp3", format="mp3")
-#play(sound)'''
+music.play()
