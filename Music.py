@@ -11,11 +11,11 @@ class Music:
         self.Tracks = []
         self.Folders = []
         self.songsList = {}
-        self.Audio = None
+        self.__Audio = None
+        self.__filename = None
         self.__get_songs()
         self.__setList()
         
-
 
     def __get_songs(self, Path = '/', Format = '*.mp3'):
         
@@ -30,11 +30,9 @@ class Music:
                 self.Tracks.append(os.path.join(filename))
                 Source = os.path.join(root , filename)
                
-        
                 cacheFile.write(filename + ":*:")
                 cacheFile.write(Source)
-                cacheFile.write('\n')
-               
+                cacheFile.write('\n')     
         cacheFile.close()
 
     
@@ -46,40 +44,51 @@ class Music:
             name, path = line.split(":*:")
             self.songsList[name] = path[:-1]
         
-    
-    
-
-    
-    def __play(self):
+    def __get_filename(self):
         val = 1
+        print("Select the song among the songs from the List below ")
+        print()
         for song in self.songsList.keys():
             print(val , ": ", song)
             val += 1
         Num = int(input("Enter the Song Number to play : "))
         songsName = list(self.songsList)
+        self.__filename = self.songsList[songsName[Num-1]]
+        return self.__filename
+
+
+    def __play(self):
+        
         #sound = AudioSegment.from_file(self.songsList[songsName[Num-1]], format="mp3")
         #play(sound)
+        self.__Audio = AudioPlayer(self.__get_filename())
+        self.__Audio.play()
+        #return self.__Audio
 
-        self.Audio = AudioPlayer(self.songsList[songsName[Num-1]])
-        self.Audio.play()
-        return self.Audio
 
     def __Pause(self):
-        self.Audio.pause()
+        self.__Audio.pause()
         print("Audio is paused")
-        return self.Audio
+        #return self.__Audio
+
 
     def __Resume(self):
-        self.Audio.resume()
+        self.__Audio.resume()
         print("Audio is resumed")
-        return self.Audio
+        #return self.__Audio
     
-    def __Stop(self):
-        self.Audio.stop()
-        print("Audio is stopped , Thank you.")
-        return self.Audio
 
+    def __Stop(self):
+        self.__Audio.stop()
+        print("Audio is stopped")
+        #return self.__Audio
+
+
+    def __Close(self):
+        self.__Audio.close()
+        print("Audio player is closed , Thank you")
     
+
     def Drive(self):
         self.__play()
         Num = int(input("Enter 1 to pause Audio : "))
@@ -91,7 +100,9 @@ class Music:
         Num = int(input("Enter 3 to stop Audio : "))
         if(Num == 3):
             self.__Stop()
-
+        Num = int(input("Enter 4 to close the Audio player : "))
+        if(Num == 4):
+            self.__Close()
 
 
 
