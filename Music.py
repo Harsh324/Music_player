@@ -98,7 +98,9 @@ class Music:
     def menu(self):
         while self.SongID != psutil.STATUS_ZOMBIE:
             self.MusicControl = int(
-                input("  (1 : pause/play)\n  (2 : loopSong)\n  (3 : loopPlaylist)\n  (4 : loopAB)\n  (5 : seek)\n"))
+                input("  (1 : pause/play)\n  (2 : loopSong)\n  "
+                      "(3 : loopPlaylist)\n  (4 : loopAB)\n  "
+                      "(5 : seek)\n  (6 : stop)"))
 
             if 1 == self.MusicControl:
                 self.__pausePlay()
@@ -113,9 +115,14 @@ class Music:
                 pass
 
             elif 5 == self.MusicControl:
-                pass
+                self.seek()
 
-    def seek(self, seekValue):
+            elif 6 == self.MusicControl:
+                self.stop()
+
+
+    def seek(self):
+        seekValue = int(input("\nEnter the starting position in seconds : "))
         psutil.Process(self.SongID).kill()
         sound = AudioSegment.from_file(self.songName, format="mp3", start_second=seekValue)
         
@@ -124,7 +131,11 @@ class Music:
         self.SongID = p1.pid
 
 
-
+    def stop(self):
+        psutil.Process(self.SongID).kill()
+        self.SongID = None
+        self.songName = None
+        self.selectSong()
             
 
 
