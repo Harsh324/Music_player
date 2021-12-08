@@ -1,10 +1,12 @@
 from logging import NOTSET
 import multiprocessing
 from typing import MutableMapping
+
 from pydub import AudioSegment
 from pydub.playback import play
 import fnmatch
 import os
+
 from threading import Thread
 import multiprocessing as mp
 import psutil
@@ -15,13 +17,13 @@ class Music:
         self.Tracks = []
         self.Folders = []
         self.songsList = {}
+
         self.MusicControl = None
         self.SongID = None
-
+        
         self.__get_songs()
         self.__setList()
         
-
 
     def __get_songs(self, Path = '/', Format = '*.mp3'):
         
@@ -36,11 +38,9 @@ class Music:
                 self.Tracks.append(os.path.join(filename))
                 Source = os.path.join(root , filename)
                
-        
                 cacheFile.write(filename + ":*:")
                 cacheFile.write(Source)
-                cacheFile.write('\n')
-               
+                cacheFile.write('\n')     
         cacheFile.close()
 
     
@@ -52,17 +52,22 @@ class Music:
             name, path = line.split(":*:")
             self.songsList[name] = path[:-1]
         
-    
+
 
     def selectSong(self):
-    
         val = 1
+        print("Select the song among the songs from the List below ")
+        print()
         for song in self.songsList.keys():
             print(val , ": ", song)
             val += 1
-            
         Num = int(input("Enter the Song Number to play : "))
         songsName = list(self.songsList)
+        self.__filename = self.songsList[songsName[Num-1]]
+        return self.__filename
+
+
+    def __play(self):
         
         self.play(self.songsList[songsName[Num-1]])
         
@@ -102,3 +107,4 @@ class Music:
 
 music = Music()
 music.selectSong()
+
