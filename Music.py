@@ -22,6 +22,9 @@ class Music:
         self.SongID = None
         self.songName = None
 
+        self.songLoop = False
+        self.playlistLoopFlag = False
+
         self.__get_songs()
         self.__setList()
         
@@ -65,17 +68,19 @@ class Music:
         songsName = list(self.songsList)
         
         self.songName = self.songsList[songsName[Num-1]]
-        self.play(self.songsList[songsName[Num-1]])
+        self.play()
         
     
-    def play(self, song):
-        sound = AudioSegment.from_file(song, format="mp3")
+    def play(self):
+        sound = AudioSegment.from_file(self.songName, format="mp3")
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
-        self.SongID = p1.pid
-        self.menu()        
-
+        self.SongID = p1.pid    
+        
+        if False == self.songLoop:
+            self.menu()
+ 
 
     def __pausePlay(self):
         process = psutil.Process(self.SongID)
@@ -101,13 +106,16 @@ class Music:
             self.MusicControl = int(
                 input("  (1 : pause/play)\n  (2 : loopSong)\n  "
                       "(3 : loopPlaylist)\n  (4 : loopAB)\n  "
-                      "(5 : seek)\n  (6 : stop)"))
+                      "(5 : seek)\n  (6 : stop)\n"))
 
             if 1 == self.MusicControl:
                 self.__pausePlay()
 
             elif 2 == self.MusicControl:
-                pass
+                self.songLoop = True
+                
+                while True == self.songLoop:
+                    self.play()
 
             elif 3 == self.MusicControl:
                 pass
@@ -123,8 +131,9 @@ class Music:
 
 
     def seek(self):
-        seekValue = int(input("\nEnter the starting position in seconds : "))
         psutil.Process(self.SongID).kill()
+        seekValue = int(input("\nEnter the starting position in seconds : "))
+
         sound = AudioSegment.from_file(self.songName, format="mp3", start_second=seekValue)
         
         p1 = mp.Process(target=play, args=(sound,))
@@ -139,6 +148,10 @@ class Music:
         self.selectSong()
             
 
+    def loopSong(self):
+        p1 = psutil.Process(self.SongID)
+        
+        
 
 
 if __name__ == "__main__":
