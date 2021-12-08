@@ -1,9 +1,13 @@
+from logging import NOTSET
+import multiprocessing
+from typing import MutableMapping
 from pydub import AudioSegment
 from pydub.playback import play
 import fnmatch
 import os
-
-
+from threading import Thread
+import multiprocessing as mp
+import psutil
 
 class Music:
 
@@ -11,7 +15,9 @@ class Music:
         self.Tracks = []
         self.Folders = []
         self.songsList = {}
-        
+        self.MusicControl = None
+        self.SongID = None
+
         self.__get_songs()
         self.__setList()
         
@@ -48,7 +54,7 @@ class Music:
         
     
 
-    def play(self):
+    def selectSong(self):
     
         val = 1
         for song in self.songsList.keys():
@@ -58,11 +64,41 @@ class Music:
         Num = int(input("Enter the Song Number to play : "))
         songsName = list(self.songsList)
         
-        sound = AudioSegment.from_file(self.songsList[songsName[Num-1]], format="mp3")
-        play(sound)
+        self.play(self.songsList[songsName[Num-1]])
+        
+    
+    def play(self, song):
+        sound = AudioSegment.from_file(song, format="mp3")
+        
+        p1 = mp.Process(target=play, args=(sound,))
+        p1.start()
+        self.SongID = p1.pid
+        self.pause()        
 
 
+    def pause(self):
+        process = psutil.Process(self.SongID)
+        
+        while(process.status() != psutil.STATUS_ZOMBIE):
+            
+            self.MusicControl = int(input("\nEnter 1 to pause playback "))
+            if(self.MusicControl == 1):
+                """
+                Halt the execution of play
+                """
+                process.suspend()
+                # print(process.status())
+
+            self.MusicControl = int(input("\nEnter 1 to resume playback "))
+            if(self.MusicControl == 1):
+                """
+                Resume the execution of play
+                """
+                process.resume()
+                # print(process.status())
+            
+        
 
 
 music = Music()
-music.play()
+music.selectSong()
