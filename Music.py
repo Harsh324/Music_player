@@ -67,10 +67,6 @@ class Music:
         return self.__filename
 
 
-    def __play(self):
-        
-        self.play(self.songsList[songsName[Num-1]])
-        
     
     def play(self, song):
         sound = AudioSegment.from_file(song, format="mp3")
