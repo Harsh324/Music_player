@@ -1,9 +1,15 @@
-import audioplayer
+from logging import NOTSET
+import multiprocessing
+from typing import MutableMapping
+
 from pydub import AudioSegment
 from pydub.playback import play
 import fnmatch
 import os
-from audioplayer import AudioPlayer
+
+from threading import Thread
+import multiprocessing as mp
+import psutil
 
 class Music:
 
@@ -11,8 +17,10 @@ class Music:
         self.Tracks = []
         self.Folders = []
         self.songsList = {}
-        self.__Audio = None
-        self.__filename = None
+
+        self.MusicControl = None
+        self.SongID = None
+        
         self.__get_songs()
         self.__setList()
         
@@ -44,7 +52,9 @@ class Music:
             name, path = line.split(":*:")
             self.songsList[name] = path[:-1]
         
-    def __get_filename(self):
+
+
+    def selectSong(self):
         val = 1
         print("Select the song among the songs from the List below ")
         print()
@@ -59,53 +69,42 @@ class Music:
 
     def __play(self):
         
-        #sound = AudioSegment.from_file(self.songsList[songsName[Num-1]], format="mp3")
-        #play(sound)
-        self.__Audio = AudioPlayer(self.__get_filename())
-        self.__Audio.play()
-        #return self.__Audio
-
-
-    def __Pause(self):
-        self.__Audio.pause()
-        print("Audio is paused")
-        #return self.__Audio
-
-
-    def __Resume(self):
-        self.__Audio.resume()
-        print("Audio is resumed")
-        #return self.__Audio
+        self.play(self.songsList[songsName[Num-1]])
+        
     
-
-    def __Stop(self):
-        self.__Audio.stop()
-        print("Audio is stopped")
-        #return self.__Audio
-
-
-    def __Close(self):
-        self.__Audio.close()
-        print("Audio player is closed , Thank you")
-    
-
-    def Drive(self):
-        self.__play()
-        Num = int(input("Enter 1 to pause Audio : "))
-        if(Num == 1):
-            self.__Pause()
-        Num = int(input("Enter 2 to resume Audio : "))
-        if(Num == 2):
-            self.__Resume()
-        Num = int(input("Enter 3 to stop Audio : "))
-        if(Num == 3):
-            self.__Stop()
-        Num = int(input("Enter 4 to close the Audio player : "))
-        if(Num == 4):
-            self.__Close()
+    def play(self, song):
+        sound = AudioSegment.from_file(song, format="mp3")
+        
+        p1 = mp.Process(target=play, args=(sound,))
+        p1.start()
+        self.SongID = p1.pid
+        self.pause()        
 
 
+    def pause(self):
+        process = psutil.Process(self.SongID)
+        
+        while(process.status() != psutil.STATUS_ZOMBIE):
+            
+            self.MusicControl = int(input("\nEnter 1 to pause playback "))
+            if(self.MusicControl == 1):
+                """
+                Halt the execution of play
+                """
+                process.suspend()
+                # print(process.status())
+
+            self.MusicControl = int(input("\nEnter 1 to resume playback "))
+            if(self.MusicControl == 1):
+                """
+                Resume the execution of play
+                """
+                process.resume()
+                # print(process.status())
+            
+        
 
 
 music = Music()
-music.Drive()
+music.selectSong()
+
