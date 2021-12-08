@@ -3,6 +3,7 @@ Songs/*.mp3
 *.txt
 /Practice.py
 /Practice1.py
+
 /test.py
 # Editors
 .vscode/
@@ -129,3 +130,7 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Djano_framework
+/web_audio
+/manage.py
