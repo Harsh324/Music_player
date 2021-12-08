@@ -2,6 +2,7 @@
 Songs/*.mp3
 *.txt
 /Practice.py
+/Practice1.py
 
 # Editors
 .vscode/
