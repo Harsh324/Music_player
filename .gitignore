@@ -76,7 +76,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
+#db.sqlite3
 
 # Flask stuff:
 instance/
@@ -132,5 +132,5 @@ venv.bak/
 dmypy.json
 
 # Djano_framework
-/web_audio
-/manage.py
+#web_audio
+#manage.py
