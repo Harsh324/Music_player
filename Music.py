@@ -25,6 +25,7 @@ class Music:
 
         self.songLoop = False
         self.playlistLoopFlag = False
+        self.loopflag = False
 
         self.__get_songs()
         self.__setList()
@@ -123,7 +124,12 @@ class Music:
                 pass
 
             elif 4 == self.MusicControl:
-                pass
+                if self.loopflag == True:
+                    self.loopflag = False
+                    self.stop()
+                else:
+                    self.loopflag = True
+                    self.loopAB()
 
             elif 5 == self.MusicControl:
                 self.seek()
@@ -136,9 +142,7 @@ class Music:
         psutil.Process(self.SongID).kill()
         seekValue = int(input("\nEnter the starting position in seconds : "))
 
-        sound = self.songSegment
-        
-        sound = sound[seekValue*1000:]
+        sound = self.songSegment[seekValue*1000:]
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
@@ -149,13 +153,32 @@ class Music:
         psutil.Process(self.SongID).kill()
         self.SongID = None
         self.songName = None
+        self.playlistLoopFlag = False
+        self.loopflag = False
+        self.songLoop = False
         self.selectSong()
-            
+
 
     def loopSong(self):
         p1 = psutil.Process(self.SongID)
-        
-        
+
+    
+    def loopAB(self):
+        startSecond = int(input("\nEnter starting position in seconds : "))
+        endSecond = int(input("\nEnter ending position in seconds : "))
+
+        sound = self.songSegment[startSecond*1000: endSecond*1000]
+        psutil.Process(self.SongID).kill()
+
+        def loop(x):
+            while self.loopflag:
+                p1 = mp.Process(target=play, args=(sound,))
+                p1.start()
+                self.SongID = p1.pid
+                p1.join()
+            
+        l1 = Thread(target=loop, args=(5,))
+        l1.start()
 
 
 if __name__ == "__main__":
