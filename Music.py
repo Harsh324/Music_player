@@ -21,6 +21,7 @@ class Music:
         self.MusicControl = None
         self.SongID = None
         self.songName = None
+        self.songSegment = None
 
         self.songLoop = False
         self.playlistLoopFlag = False
@@ -72,7 +73,8 @@ class Music:
         
     
     def play(self):
-        sound = AudioSegment.from_file(self.songName, format="mp3")
+        
+        self.songSegment = sound = AudioSegment.from_file(self.songName, format="mp3")
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
@@ -134,7 +136,9 @@ class Music:
         psutil.Process(self.SongID).kill()
         seekValue = int(input("\nEnter the starting position in seconds : "))
 
-        sound = AudioSegment.from_file(self.songName, format="mp3", start_second=seekValue)
+        sound = self.songSegment
+        
+        sound = sound[seekValue*1000:]
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
