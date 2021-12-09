@@ -20,6 +20,7 @@ class Music:
 
         self.MusicControl = None
         self.SongID = None
+        self.loopID = None
         self.songName = None
         self.songSegment = None
 
@@ -115,10 +116,12 @@ class Music:
                 self.__pausePlay()
 
             elif 2 == self.MusicControl:
-                self.songLoop = True
-                
-                while True == self.songLoop:
-                    self.play()
+                if self.loopflag == True:
+                    self.loopflag = False
+                    self.stop()
+                else:
+                    self.loopflag = True
+                    self.loopSong()
 
             elif 3 == self.MusicControl:
                 pass
@@ -151,6 +154,7 @@ class Music:
 
     def stop(self):
         psutil.Process(self.SongID).kill()
+
         self.SongID = None
         self.songName = None
         self.playlistLoopFlag = False
@@ -159,26 +163,27 @@ class Music:
         self.selectSong()
 
 
-    def loopSong(self):
-        p1 = psutil.Process(self.SongID)
+    def loopSong(self, startSecond = 0, endSecond = 0):
+        if 0 == endSecond:
+            endSecond = self.songSegment.duration_seconds
+            
+        sound = self.songSegment[startSecond*1000: endSecond*1000]
+        psutil.Process(self.SongID).kill()
+
+        def __innerLoop(x):
+            while self.loopflag:
+                play(sound)
+                
+        l1 = mp.Process(target=__innerLoop, args=(5,))
+        l1.start()
+        self.SongID = l1.pid
 
     
     def loopAB(self):
         startSecond = int(input("\nEnter starting position in seconds : "))
         endSecond = int(input("\nEnter ending position in seconds : "))
 
-        sound = self.songSegment[startSecond*1000: endSecond*1000]
-        psutil.Process(self.SongID).kill()
-
-        def loop(x):
-            while self.loopflag:
-                p1 = mp.Process(target=play, args=(sound,))
-                p1.start()
-                self.SongID = p1.pid
-                p1.join()
-            
-        l1 = Thread(target=loop, args=(5,))
-        l1.start()
+        self.loopSong(startSecond, endSecond)
 
 
 if __name__ == "__main__":
