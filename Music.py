@@ -6,6 +6,7 @@ from pydub import AudioSegment
 from pydub.playback import play
 import fnmatch
 import os
+import time 
 
 from threading import Thread
 import multiprocessing as mp
@@ -17,7 +18,7 @@ class Music:
         self.Tracks = []
         self.Folders = []
         self.songsList = {}
-
+        self.__time = 0
         self.MusicControl = None
         self.SongID = None
         self.songName = None
@@ -53,7 +54,16 @@ class Music:
             name, path = line.split(":*:")
             self.songsList[name] = path[:-1]
         
-    
+    def __timer(self):
+        while self.SongID != psutil.STATUS_ZOMBIE:
+            mins, secs = divmod(self.__time, 60)
+            timer = '{:02d}:{:02d}'.format(mins, secs)
+            print(timer, end="\r")
+            time.sleep(1)
+            self.__time += 1
+
+
+
     def selectSong(self):
         val = 1
         print("Select the song among the songs from the List below ")
@@ -61,7 +71,8 @@ class Music:
         for song in self.songsList.keys():
             print(val , ": ", song)
             val += 1
-        Num = int(input("Enter the Song Number to play : "))
+        Num = int(input("\nEnter the Song Number to play : "))
+        print()
         songsName = list(self.songsList)
         
         self.songName = self.songsList[songsName[Num-1]]
@@ -74,17 +85,24 @@ class Music:
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
         self.SongID = p1.pid
+        print("Currently Playing : ",os.path.basename(self.songName))
+        print()
+        #P2 = mp.Process(targest = self.__timer())
+        #P2.start()
+        #P3 = mp.Process(target = self.menu())
+        #P3.start()
         self.menu()        
 
 
     def __pausePlay(self):
         process = psutil.Process(self.SongID)
-
+        #process1 = psutil.Process(self.__timer())
         # while(process.status() != psutil.STATUS_ZOMBIE):
         if self.MusicControl == 1 and process.status() == psutil.STATUS_SLEEPING:
             """
             Halt the execution of play
             """
+            #process1.suspend()
             process.suspend()
             # print(process.status())
 
@@ -93,15 +111,18 @@ class Music:
             Resume the execution of play
             """
             process.resume()
+            #process1.resume()
             # print(process.status())
 
 
     def menu(self):
         while self.SongID != psutil.STATUS_ZOMBIE:
+            #self.__timer()
+            print("Enter command : ")
             self.MusicControl = int(
-                input("  (1 : pause/play)\n  (2 : loopSong)\n  "
-                      "(3 : loopPlaylist)\n  (4 : loopAB)\n  "
-                      "(5 : seek)\n  (6 : stop)"))
+                input(" (1 : pause/play), (2 : loopSong), "
+                      "(3 : loopPlaylist), (4 : loopAB), "
+                      "(5 : seek), (6 : stop) : "))
 
             if 1 == self.MusicControl:
                 self.__pausePlay()
