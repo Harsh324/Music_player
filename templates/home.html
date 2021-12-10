@@ -3,82 +3,66 @@
 <!-- this is title block-->
 {% block title %} Home {% endblock  %} 
 
-<!-- Style block i created here -->
-{% block style %}
-    #container {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-    }
-
-    #top_div {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 50%;
-        background-color:#009900;
-        text-align:center;
-    }
-    
-    #bottom_div {
-        position: absolute;
-        top: 50%;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background-color:#6610f2;
-        text-align:center;
-        color:#FFFFFF;
-    }
-{% endblock%}
-
-<!-- body block is created here -->
 {% block body %}
 
-    <div id="container">
-
-
-        <div id="top_div">
-            <!--div class = "container-fluid height-50%"-->
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    </div>
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <img src="/static/Images/mountain-g4ca279521_1920.jpg" class="d-block w-100" alt="..." width="device-width" height="390">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="/static/Images/mountains-gc9fe4d672_1920.jpg" class="d-block w-100" alt="..." width="device-width" height="390">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="/static/Images/sea-g76d6f144f_1280.jpg" class="d-block w-100" alt="..." width="width" height="390">
-                      </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                    </button>
-                  </div>
-            <!--/div-->
+  <!-- Container -->
+  <div id = "container">
+    
+    <!-- top div container -->
+    <div id = "top">
+      
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
-
-
-
-        <div id="bottom_div">
-
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="/static/Images/mountain-g4ca279521_1920.jpg" class="d-block w-100" alt="..." width="device-width" height="390">
+          </div>
+          <div class="carousel-item">
+            <img src="/static/Images/mountains-gc9fe4d672_1920.jpg" class="d-block w-100" alt="..." width="device-width" height="390">
+          </div>
+          <div class="carousel-item">
+            <img src="/static/Images/sea-g76d6f144f_1280.jpg" class="d-block w-100" alt="..." width="width" height="390">
+          </div>
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
 
     </div>
+
+    <!-- bottom div container -->
+    <div id = "bottom">
+
+      <!-- slider -->
+      <div class="slider">
+        <input type="range" min="0" max="100" value="0" id="duration_slider" onchange="change_duration()">
+
+      </div>
+
+      <!-- Controls : Play , pause , next etc -->
+      <div class="control">
+        <button onclick="previous()" id="pre"><i class="fa fa-step-backward" aria-hidden="true"></i></button>
+        <button onclick="play()/pause()" id="play"><i class="fa fa-play" aria-hidden="true"></i></button>
+        <button onclick="next()" id="next"><i class="fa fa-step-forward" aria-hidden="true"></i></button>
+        <button onclick = ""
+      </div>
+
+      
+    </div>
+
+  </div>
+
+
 
 {% endblock %}
 
