@@ -134,3 +134,8 @@ dmypy.json
 # Djano_framework
 #web_audio
 #manage.py
+/templates/controls.html
+/templates/Music_controls.css 
+/templates/index.html 
+
+
