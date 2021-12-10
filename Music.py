@@ -21,7 +21,13 @@ class Music:
         self.__time = 0
         self.MusicControl = None
         self.SongID = None
+        self.loopID = None
         self.songName = None
+        self.songSegment = None
+
+        self.songLoop = False
+        self.playlistLoopFlag = False
+        self.loopflag = False
 
         self.__get_songs()
         self.__setList()
@@ -76,23 +82,20 @@ class Music:
         songsName = list(self.songsList)
         
         self.songName = self.songsList[songsName[Num-1]]
-        self.play(self.songsList[songsName[Num-1]])
+        self.play()
         
     
-    def play(self, song):
-        sound = AudioSegment.from_file(song, format="mp3")
+    def play(self):
+        
+        self.songSegment = sound = AudioSegment.from_file(self.songName, format="mp3")
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
-        self.SongID = p1.pid
-        print("Currently Playing : ",os.path.basename(self.songName))
-        print()
-        #P2 = mp.Process(targest = self.__timer())
-        #P2.start()
-        #P3 = mp.Process(target = self.menu())
-        #P3.start()
-        self.menu()        
-
+        self.SongID = p1.pid    
+        
+        if False == self.songLoop:
+            self.menu()
+ 
 
     def __pausePlay(self):
         process = psutil.Process(self.SongID)
@@ -120,21 +123,31 @@ class Music:
             #self.__timer()
             print("Enter command : ")
             self.MusicControl = int(
-                input(" (1 : pause/play), (2 : loopSong), "
-                      "(3 : loopPlaylist), (4 : loopAB), "
-                      "(5 : seek), (6 : stop) : "))
+                input("  (1 : pause/play)\n  (2 : loopSong)\n  "
+                      "(3 : loopPlaylist)\n  (4 : loopAB)\n  "
+                      "(5 : seek)\n  (6 : stop)\n"))
 
             if 1 == self.MusicControl:
                 self.__pausePlay()
 
             elif 2 == self.MusicControl:
-                pass
+                if self.loopflag == True:
+                    self.loopflag = False
+                    self.stop()
+                else:
+                    self.loopflag = True
+                    self.loopSong()
 
             elif 3 == self.MusicControl:
                 pass
 
             elif 4 == self.MusicControl:
-                pass
+                if self.loopflag == True:
+                    self.loopflag = False
+                    self.stop()
+                else:
+                    self.loopflag = True
+                    self.loopAB()
 
             elif 5 == self.MusicControl:
                 self.seek()
@@ -144,9 +157,10 @@ class Music:
 
 
     def seek(self):
-        seekValue = int(input("\nEnter the starting position in seconds : "))
         psutil.Process(self.SongID).kill()
-        sound = AudioSegment.from_file(self.songName, format="mp3", start_second=seekValue)
+        seekValue = int(input("\nEnter the starting position in seconds : "))
+
+        sound = self.songSegment[seekValue*1000:]
         
         p1 = mp.Process(target=play, args=(sound,))
         p1.start()
@@ -155,11 +169,36 @@ class Music:
 
     def stop(self):
         psutil.Process(self.SongID).kill()
+
         self.SongID = None
         self.songName = None
+        self.playlistLoopFlag = False
+        self.loopflag = False
+        self.songLoop = False
         self.selectSong()
-            
 
+
+    def loopSong(self, startSecond = 0, endSecond = 0):
+        if 0 == endSecond:
+            endSecond = self.songSegment.duration_seconds
+            
+        sound = self.songSegment[startSecond*1000: endSecond*1000]
+        psutil.Process(self.SongID).kill()
+
+        def __innerLoop(x):
+            while self.loopflag:
+                play(sound)
+                
+        l1 = mp.Process(target=__innerLoop, args=(5,))
+        l1.start()
+        self.SongID = l1.pid
+
+    
+    def loopAB(self):
+        startSecond = int(input("\nEnter starting position in seconds : "))
+        endSecond = int(input("\nEnter ending position in seconds : "))
+
+        self.loopSong(startSecond, endSecond)
 
 
 if __name__ == "__main__":
