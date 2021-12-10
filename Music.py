@@ -99,23 +99,17 @@ class Music:
 
     def __pausePlay(self):
         process = psutil.Process(self.SongID)
-        #process1 = psutil.Process(self.__timer())
-        # while(process.status() != psutil.STATUS_ZOMBIE):
         if self.MusicControl == 1 and process.status() == psutil.STATUS_SLEEPING:
             """
             Halt the execution of play
             """
-            #process1.suspend()
             process.suspend()
-            # print(process.status())
 
         elif self.MusicControl == 1 and process.status() == psutil.STATUS_STOPPED:
             """
             Resume the execution of play
             """
             process.resume()
-            #process1.resume()
-            # print(process.status())
 
 
     def menu(self):
