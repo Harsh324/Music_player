@@ -5,10 +5,10 @@
 <head>
   <meta charset="UTF-8">
   <title>CodePen - Material Music Player</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.css'>
-<link rel='stylesheet' href='https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.carousel.min.css'>
-<link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{%static 'CSS/normalize.min.css' %}">
+<link rel='stylesheet' href="{%static 'CSS/fontsDesign.css' %}">
+<link rel='stylesheet' href="{%static 'CSS/owl.carousel.min.css' %}">
+<link rel="stylesheet" href="{% static 'CSS/style.css' %}">
 
 </head>
 <body>
@@ -28,16 +28,16 @@
 				<div class="left__panel">
 					<div class="cover owl-carousel">
 					    <div class="item">
-					    	<img src="http://cdn.pikoff.com/wp-content/uploads/2016/05/02/Ai-Pink-and-purple-abstract-background-vector-free-download-350x350.jpg" alt="">
+					    	<img src="{%static 'Images/mountain-g4ca279521_1920.jpg'%}" alt="">
 					    </div>
 					    <div class="item">
-					    	<img src="http://cdn.pikoff.com/wp-content/uploads/2016/05/02/Ai-Pink-and-orange-abstract-background-vector-free-download-350x350.jpg" alt="">
+					    	<img src="{%static 'Images/mountains-gc9fe4d672_1920.jpg' %}" alt="">
 					    </div>
 					    <div class="item">
-					    	<img src="http://cdn.pikoff.com/wp-content/uploads/2016/05/02/Ai-Blue-abstract-background-vector-free-download-350x350.jpg" alt="">
+					    	<img src="{%static 'Images/sea-g76d6f144f_1280.jpg' %}" alt="">
 					    </div>
 					    <div class="item">
-					    	<img src="http://cdn.pikoff.com/wp-content/uploads/2016/05/02/Ai-Yellow-and-green-abstract-background-vector-free-download-350x350.jpg" alt="">
+					    	<img src="{%static 'Images/Rohit-Sharma-6.jpg' %}" alt="">
 					    </div>
 					</div>
 				</div>
@@ -97,9 +97,9 @@
 		</div>
 	</div>
 <!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
-<script src='https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/owl.carousel.js'></script>
-<script  src="{% static 'script.js' %}"></script>
+<script src="{%static 'scripts/jquery.min.js'%}"></script>
+<script src="{%static 'scripts/owl.carousel.js'%}"></script>
+<script  src="{% static 'scripts/script.js' %}"></script>
 
 </body>
 </html>
